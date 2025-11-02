@@ -7,7 +7,6 @@ import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
 import { generateItinerary } from '../mock/api'
 import useSpeech from '../hooks/useSpeech'
-import { savePlan } from '../services/storage'
 
 
 export default function PlannerCard() {

@@ -4,12 +4,10 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
-import { currentUser, logout } from '../services/auth'
 
 
 export default function Header() {
     const nav = useNavigate()
-    const user = currentUser()
 
 
     return (

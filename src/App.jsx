@@ -1,31 +1,26 @@
 import React from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
-import CssBaseline from '@mui/material/CssBaseline'
-import Box from '@mui/material/Box'
-import Header from './components/Header'
-import SideMenu from './components/SideMenu'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import LoginPage from './pages/LoginPage'
 import Dashboard from './pages/Dashboard'
-import Login from './pages/Login'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 
-
-export default function App() {
-    const loc = useLocation()
-    const showDrawer = loc.pathname !== '/login'
-
-
+function App() {
     return (
-        <>
-            <CssBaseline />
-            <Header />
-            <Box sx={{ display: 'flex' }}>
-                {showDrawer && <SideMenu />}
-                <Box component="main" sx={{ flexGrow: 1, ml: showDrawer ? '240px' : 0 }}>
-                    <Routes>
-                        <Route path="/" element={<Dashboard />} />
-                        <Route path="/login" element={<Login />} />
-                    </Routes>
-                </Box>
-            </Box>
-        </>
+        <AuthProvider>
+            <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
+        </AuthProvider>
     )
 }
+
+export default App
