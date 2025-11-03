@@ -25,7 +25,7 @@ export default function SideMenu({ open, onClose }) {
             <Box sx={{ mt: 2 }} />
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton onClick={() => { nav('/new-plan'); onClose && onClose(); }}>
+                    <ListItemButton onClick={() => { nav('/'); onClose && onClose(); }}>
                         <ListItemText primary="新建行程" />
                     </ListItemButton>
                 </ListItem>

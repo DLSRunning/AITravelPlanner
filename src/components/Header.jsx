@@ -6,7 +6,6 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
-import MenuIcon from '@mui/icons-material/Menu'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
@@ -31,7 +30,7 @@ export default function Header({ onMenuClick }) {
                     </IconButton>
                 )}
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                    React Travel Planner (Material) — 占位框架
+                    AI 旅行规划师
                 </Typography>
                 {user ? (
                     <>
