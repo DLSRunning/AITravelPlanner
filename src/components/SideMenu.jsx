@@ -8,20 +8,30 @@ import Box from '@mui/material/Box'
 import { useNavigate } from 'react-router-dom'
 
 
-export default function SideMenu() {
+export default function SideMenu({ open, onClose }) {
     const nav = useNavigate()
     return (
-        <Drawer variant="permanent" anchor="left" sx={{ width: 240, flexShrink: 0, [`& .MuiDrawer-paper`]: { width: 240 } }}>
+        <Drawer
+            variant="temporary"
+            anchor="left"
+            open={open}
+            onClose={onClose}
+            ModalProps={{ keepMounted: true }}
+            sx={{
+                [`& .MuiDrawer-paper`]: { width: 240 },
+                zIndex: 1300
+            }}
+        >
             <Box sx={{ mt: 2 }} />
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton onClick={() => nav('/')}>
-                        <ListItemText primary="仪表盘" />
+                    <ListItemButton onClick={() => { nav('/new-plan'); onClose && onClose(); }}>
+                        <ListItemText primary="新建行程" />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                    <ListItemButton onClick={() => nav('/login')}>
-                        <ListItemText primary="登录/用户" />
+                    <ListItemButton onClick={() => { nav('/history'); onClose && onClose(); }}>
+                        <ListItemText primary="历史行程" />
                     </ListItemButton>
                 </ListItem>
             </List>
