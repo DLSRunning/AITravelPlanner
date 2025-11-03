@@ -1,45 +1,20 @@
-
-
 import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-
+import MenuIcon from '@mui/icons-material/Menu'
 
 export default function Header({ onMenuClick }) {
-    const nav = useNavigate()
-    const { user, logout } = useAuth()
-
     return (
-        <AppBar position="static">
+        <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
             <Toolbar>
-                {onMenuClick && (
-                    <IconButton
-                        color="inherit"
-                        edge="start"
-                        onClick={onMenuClick}
-                        sx={{ mr: 2 }}
-                        aria-label="open drawer"
-                    >
-                        <DashboardIcon />
-                    </IconButton>
-                )}
-                <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                    AI 旅行规划师
+                <IconButton color="inherit" edge="start" onClick={onMenuClick} sx={{ mr: 2 }}>
+                    <MenuIcon />
+                </IconButton>
+                <Typography variant="h6" noWrap component="div">
+                    智能行程规划系统
                 </Typography>
-                {user ? (
-                    <>
-                        <Typography sx={{ mr: 2 }}>{user.username}</Typography>
-                        <Button color="inherit" onClick={async () => { await logout(); nav('/login') }}>登出</Button>
-                    </>
-                ) : (
-                    <Button color="inherit" onClick={() => nav('/login')}>登录</Button>
-                )}
             </Toolbar>
         </AppBar>
     )
