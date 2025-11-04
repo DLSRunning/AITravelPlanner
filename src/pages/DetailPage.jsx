@@ -15,7 +15,9 @@ import {
     Chip,
     Stack,
 } from '@mui/material'
-import { Map, APILoader } from '@uiw/react-baidu-map';
+//import { Map, APILoader } from '@uiw/react-baidu-map';
+//import { Map, Marker, NavigationControl, InfoWindow } from 'react-bmap'
+import BaiduMap from '../components/Map.jsx'
 
 export default function DetailPage() {
     const { id } = useParams()
@@ -280,16 +282,9 @@ export default function DetailPage() {
                         </Box>
                         <Box sx={{ flex: 1, position: 'relative'}}>
                             {selectedItinerary ? (
-                                <APILoader akay="LVrZWFDaAQV3VaxnT2EKjwoKfpFLz2iv">
-                                    <Map
-                                        style={{ width: '100%', height: '100%' }}
-                                        center={{ lng: selectedItinerary.position.lng, lat: selectedItinerary.position.lat }}
-                                        zoom={20}
-                                        enableScrollWheelZoom={true}
-                                        enableDragging={true}
-                                        enableDoubleClickZoom={true}
-                                    />
-                                </APILoader>
+                                <BaiduMap
+                                    item={selectedItinerary}
+                                 />
                             ) : (
                                 <Box
                                     display="flex"
