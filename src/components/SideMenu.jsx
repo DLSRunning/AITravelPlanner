@@ -72,7 +72,6 @@ export default function SideMenu({ open, onClose }) {
             onClose={onClose}
             ModalProps={{ keepMounted: true }}
             keepMounted={true}
-            onBackdropClick={onClose}
             sx={{
                 zIndex: (theme) => theme.zIndex.drawer + 2,
                 '& .MuiDrawer-paper': {
