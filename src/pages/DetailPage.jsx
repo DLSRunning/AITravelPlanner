@@ -186,6 +186,7 @@ export default function DetailPage() {
                                 <Stack direction="row" spacing={1} flexWrap="wrap" mb={2}>
                                     <Chip label={selectedItinerary.transportation} size="small" color="info" />
                                     <Chip label={selectedItinerary.accommodation} size="small" color="success" />
+                                    <Chip label={`预算: ${selectedItinerary.daily_expense || 0} 元`} size="small" color="warning" />
                                 </Stack>
 
                                 <Divider sx={{ my: 2 }} />
