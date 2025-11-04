@@ -15,7 +15,7 @@ import {
     Chip,
     Stack,
 } from '@mui/material'
-import MapView from './MapView'
+import { Map, APILoader } from '@uiw/react-baidu-map';
 
 export default function DetailPage() {
     const { id } = useParams()
@@ -90,7 +90,6 @@ export default function DetailPage() {
                 p: { xs: 2, md: 3 },
             }}
         >
-        
             <Grid container spacing={3} sx={{ height: 'calc(100vh - 160px)' }}>
                 {/* 左侧：行程选择 */}
                 <Grid
@@ -278,9 +277,18 @@ export default function DetailPage() {
                                 地图位置
                             </Typography>
                         </Box>
-                        <Box sx={{ flex: 1, position: 'relative' }}>
+                        <Box sx={{ flex: 1, position: 'relative'}}>
                             {selectedItinerary ? (
-                                <MapView it={selectedItinerary} />
+                                <APILoader akay="LVrZWFDaAQV3VaxnT2EKjwoKfpFLz2iv">
+                                    <Map
+                                        style={{ width: '100%', height: '100%' }}
+                                        center={{ lng: selectedItinerary.position.lng, lat: selectedItinerary.position.lat }}
+                                        zoom={20}
+                                        enableScrollWheelZoom={true}
+                                        enableDragging={true}
+                                        enableDoubleClickZoom={true}
+                                    />
+                                </APILoader>
                             ) : (
                                 <Box
                                     display="flex"
