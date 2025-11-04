@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 const BaiduMap = ({item}) => {
     useEffect(() => {
         const script = document.createElement('script');
-        script.src = '//api.map.baidu.com/api?type=webgl&v=1.0&ak=您的密钥'; // 确保使用正确的 ak
         script.async = true;
         script.onload = () => {
             initMap(); // 百度地图加载完成后调用初始化函数

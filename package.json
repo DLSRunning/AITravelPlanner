@@ -15,6 +15,7 @@
         "@supabase/supabase-js": "^2.78.0",
         "@uiw/react-baidu-map": "^2.7.4",
         "axios": "^1.13.1",
+        "crypto-js": "^4.2.0",
         "date-fns": "^4.1.0",
         "react": "^19.1.1",
         "react-bmap": "^1.0.133",

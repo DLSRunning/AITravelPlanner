@@ -105,7 +105,6 @@ export async function generateAIItineraries(plan) {
         }
     );
     const result = response.data.choices[0].message.content
-    console.log('AI返回:', result)
 
     try {
         return JSON.parse(result)
