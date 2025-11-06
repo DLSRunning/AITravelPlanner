@@ -215,7 +215,7 @@ export default function SpeechInputButton({ onTranscript }) {
                     if (ls === true && data.data.status === 2) {
                         currentTextRef.current = fullText
                         onTranscript(fullText.trim())
-
+                        setStatus('识别完成')
                         // 可选：清理缓存
                         resultCacheRef.current.clear()
                         currentTextRef.current = ''
