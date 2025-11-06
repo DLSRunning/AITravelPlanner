@@ -1,32 +1,29 @@
-# 使用 Node.js 官方镜像作为基础镜像
-FROM node:23 AS build
+# 使用官方 Node 镜像作为基础镜像
+FROM node:23 AS builder
 
 # 设置工作目录
 WORKDIR /app
 
-# 复制 package.json 和 package-lock.json
+# 复制 package.json 和 package-lock.json（或 yarn.lock）
 COPY package*.json ./
 
-# 安装项目依赖
-RUN npm install
+# 安装依赖（生产环境 + 开发依赖，因为构建需要）
+RUN npm ci
 
-# 复制项目源代码
+# 复制源代码
 COPY . .
 
-# 生成 React 应用的生产环境构建
+# 构建生产版本的 React 应用
 RUN npm run build
 
-# 使用 Nginx 作为生产环境的 Web 服务器
+# ------------------- 生产阶段 -------------------
 FROM nginx:alpine
 
-# 删除默认的 Nginx 配置文件
-RUN rm -rf /usr/share/nginx/html/*
-
-# 复制生成的 build 文件到 Nginx 的静态文件目录
-COPY --from=build /app/build /usr/share/nginx/html
+# 从构建阶段复制构建好的静态文件到 Nginx 的 html 目录
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 # 暴露 80 端口
 EXPOSE 80
 
-# 启动 Nginx 服务器
+# 启动 Nginx
 CMD ["nginx", "-g", "daemon off;"]
