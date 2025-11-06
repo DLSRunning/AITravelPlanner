@@ -27,6 +27,7 @@ jobs:
         with:
           username: ${{ secrets.ALIYUN_DOCKER_USERNAME }}  # 使用 GitHub Secrets 存储的阿里云用户名
           password: ${{ secrets.ALIYUN_DOCKER_PASSWORD }}  # 使用 GitHub Secrets 存储的阿里云密码
+          registry: crpi-x5ucku749z915ih4.cn-shanghai.personal.cr.aliyuncs.com
 
       # 4. 构建 Docker 镜像并打标签
       - name: Build Docker image
