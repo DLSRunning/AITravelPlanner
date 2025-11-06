@@ -1,0 +1,39 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main  # 当 main 分支有更新时触发构建
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. 设置 Docker Buildx（支持多平台构建）
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # 3. 登录到阿里云 Docker Registry
+      - name: Log in to Aliyun Docker Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.ALIYUN_DOCKER_USERNAME }}  # 使用 GitHub Secrets 存储的阿里云用户名
+          password: ${{ secrets.ALIYUN_DOCKER_PASSWORD }}  # 使用 GitHub Secrets 存储的阿里云密码
+
+      # 4. 构建 Docker 镜像并打标签
+      - name: Build Docker image
+        run: |
+          docker build -t crpi-x5ucku749z915ih4.cn-shanghai.personal.cr.aliyuncs.com/dls_ai_travel_planner/ai_travel_planner:latest .
+
+      # 5. 推送 Docker 镜像到阿里云容器镜像仓库
+      - name: Push Docker image to Aliyun
+        run: |
+          docker push crpi-x5ucku749z915ih4.cn-shanghai.personal.cr.aliyuncs.com/dls_ai_travel_planner/ai_travel_planner:latest
