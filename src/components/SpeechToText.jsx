@@ -21,6 +21,8 @@ export default function SpeechInputButton({ onTranscript }) {
     const audioContextRef = useRef(null)
     const processorRef = useRef(null)
     const streamRef = useRef(null)
+    const resultCacheRef = useRef(new Map()) // 缓存每个 sn 的最终词
+    const currentTextRef = useRef('')
     const bufferCacheRef = useRef([])
     const firstFrameSentRef = useRef(false)  // 空首帧标记
     const firstRealFrameSentRef = useRef(false)  // 带音频首帧标记
@@ -164,33 +166,62 @@ export default function SpeechInputButton({ onTranscript }) {
             }
 
             ws.onmessage = (e) => {
-                const data = JSON.parse(e.data)
+                try {
+                    const data = JSON.parse(e.data)
 
-                if (data.code !== 0) {
-                    setError(data.message || `错误码: ${data.code}`)
-                    stopRecording()
-                    return
-                }
+                    // 错误处理
+                    if (data.code !== 0) {
+                        console.error('讯飞错误:', data.message)
+                        setError(data.message)
+                        return
+                    }
 
-                const result = data.data?.result
-                if (result) {
-                    bufferCacheRef.current[result.sn] = result.ws
-                }
+                    const result = data.data?.result
+                    if (!result) return
 
-                if (data.data?.status === 2) {
+                    const { sn, pgs, ls, bg, ed, ws } = result
+
+                    // 1. 中间结果更新（pgs === 'rpl' 表示替换）
+                    if (pgs === 'rpl' && result.rg) {
+                        // 替换模式：清除 rg 范围内的旧词
+                        const [start, end] = result.rg.map(Number)
+                        const words = currentTextRef.current.split('')
+                        words.splice(start, end - start)
+                        currentTextRef.current = words.join('')
+                        resultCacheRef.current.clear() // 替换后清空缓存，等待新词
+                    }
+
+                    // 2. 存储当前 sn 的词（仅第一次或更新时）
+                    if (ws && !resultCacheRef.current.has(sn)) {
+                        const wordList = ws.map(word => ({
+                            w: word.cw[0].w,
+                            bg: bg,
+                            ed: ed
+                        }))
+                        resultCacheRef.current.set(sn, wordList)
+                    }
+
+                    // 3. 重新构建完整文本（仅用未替换的部分）
                     let fullText = ''
-                    for (let i = 1; i < bufferCacheRef.current.length; i++) {
-                        const ws = bufferCacheRef.current[i]
-                        if (ws) fullText += ws.map(w => w.cw[0]?.w || '').join('')
+                    const sortedKeys = Array.from(resultCacheRef.current.keys()).sort((a, b) => a - b)
+                    for (const key of sortedKeys) {
+                        const words = resultCacheRef.current.get(key)
+                        if (words) {
+                            fullText += words.map(w => w.w).join('')
+                        }
                     }
-                    const text = fullText.trim()
-                    if (text) {
-                        onTranscript(text)
-                        setStatus('识别成功')
-                    } else {
-                        setError('未检测到有效语音')
-                    }
-                    // 不要在这里 stopRecording，让外层延迟关闭
+
+                    // 4. 最后一句结束（ls === true）
+                    if (ls === true && data.data.status === 2) {
+                        currentTextRef.current = fullText
+                        onTranscript(fullText.trim())
+
+                        // 可选：清理缓存
+                        resultCacheRef.current.clear()
+                        currentTextRef.current = ''
+                    } 
+                } catch (err) {
+                    console.error('解析错误:', err)
                 }
             }
 
